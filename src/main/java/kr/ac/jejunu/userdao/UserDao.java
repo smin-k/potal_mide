@@ -12,26 +12,41 @@ public class UserDao {
     }
 
     public User get(Integer id) throws SQLException {
-        Statement_Maker statement_maker = new Get_Statement_Maker(id);
-        return jdbc_context.get_context(statement_maker);
+        return jdbc_context.get_context(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
+            preparedStatement.setLong(1, id);
+            return preparedStatement;
+        });
     }
 
     public User insert(User user) throws SQLException{
         Statement_Maker statement_maker = new Insert_Statement_Maker(user);
-        return jdbc_context.insert_context(user, statement_maker);
-
+        return jdbc_context.insert_context(user, connection ->{
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into userinfo (name, password)  values (?,?)"
+                    , Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setObject(1, user.getName());
+            preparedStatement.setObject(2, user.getPassword());
+            return preparedStatement;
+        });
     }
 
     public void delete(Integer id) throws SQLException {
         Statement_Maker statement_maker = new Delete_Statement_Maker(id);
-        jdbc_context.updel_context(statement_maker);
-        //리턴
+        jdbc_context.updel_context(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from userinfo where id = ? ");
+            preparedStatement.setObject(1, id);return preparedStatement;
+        });
     }
 
     public void update(User user) throws SQLException {
         Statement_Maker statement_maker = new Update_Statement_Maker(user);
-        jdbc_context.updel_context(statement_maker);
-        //리턴
+        jdbc_context.updel_context(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement("update userinfo set name = ? , password = ? where id = ?");
+            preparedStatement.setObject(1, user.getName());
+            preparedStatement.setObject(2, user.getPassword());
+            preparedStatement.setObject(3, user.getId());
+            return preparedStatement;
+        });
     }
 
     private User insert_context(User user, Statement_Maker statement_maker) throws SQLException {
