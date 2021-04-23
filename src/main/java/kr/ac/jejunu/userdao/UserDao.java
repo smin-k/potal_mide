@@ -5,130 +5,47 @@ import java.sql.*;
 
 public class UserDao {
 
-    private final DataSource dataSource;
-    UserDao(DataSource dataSource){
-        this.dataSource = dataSource;
+    private final Jdbc_context jdbc_context ;
+
+    UserDao(Jdbc_context jdbc_context){
+        this.jdbc_context = jdbc_context;
     }
 
     public User get(Integer id) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        User user=null;
-        try {
-            connection = dataSource.getConnection();
-            Statement_Maker statement_maker = new Get_Statement_Maker(id);
-            preparedStatement = statement_maker.make_statement(connection);
-            resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-                user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setName(resultSet.getString("name"));
-                user.setPassword(resultSet.getString("password"));
-            }
-
-        } finally {
-            try {
-                resultSet.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //리턴
-        return user;
+        Statement_Maker statement_maker = new Get_Statement_Maker(id);
+        return jdbc_context.get_context(statement_maker);
     }
+
     public User insert(User user) throws SQLException{
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            Statement_Maker statement_maker = new Insert_Statement_Maker(user);
-            preparedStatement = statement_maker.make_statement(connection);
-
-            preparedStatement.executeUpdate();
-
-            resultSet = preparedStatement.getGeneratedKeys();
-            if(resultSet.next())
-                user.setId(resultSet.getInt(1));
-        } finally {
-            try {
-                resultSet.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        //리턴
-        return user;
+        Statement_Maker statement_maker = new Insert_Statement_Maker(user);
+        return jdbc_context.insert_context(user, statement_maker);
 
     }
 
     public void delete(Integer id) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            Statement_Maker statement_maker = new Delete_Statement_Maker(id);
-            preparedStatement = statement_maker.make_statement(connection);
-            preparedStatement.executeUpdate();
-        } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        Statement_Maker statement_maker = new Delete_Statement_Maker(id);
+        jdbc_context.updel_context(statement_maker);
         //리턴
     }
 
     public void update(User user) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            Statement_Maker statement_maker = new Update_Statement_Maker(user);
-            preparedStatement = statement_maker.make_statement(connection);
-            preparedStatement.executeUpdate();
-        } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        Statement_Maker statement_maker = new Update_Statement_Maker(user);
+        jdbc_context.updel_context(statement_maker);
         //리턴
+    }
+
+    private User insert_context(User user, Statement_Maker statement_maker) throws SQLException {
+        //리턴
+        return jdbc_context.insert_context(user, statement_maker);
+    }
+
+    private User get_context(Statement_Maker statement_maker) throws SQLException {
+
+        //리턴
+        return jdbc_context.get_context(statement_maker);
+    }
+
+    private void updel_context(Statement_Maker statement_maker) throws SQLException {
+        jdbc_context.updel_context(statement_maker);
     }
 }
