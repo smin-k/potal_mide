@@ -17,9 +17,8 @@ public class UserDao {
         User user=null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
-            preparedStatement.setLong(1, id);
-
+            Statement_Maker statement_maker = new Get_Statement_Maker(id);
+            preparedStatement = statement_maker.make_statement(connection);
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 user = new User();
@@ -55,10 +54,9 @@ public class UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("insert into userinfo (name, password)  values (?,?)"
-                    , Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setObject(1, user.getName());
-            preparedStatement.setObject(2, user.getPassword());
+            Statement_Maker statement_maker = new Insert_Statement_Maker(user);
+            preparedStatement = statement_maker.make_statement(connection);
+
             preparedStatement.executeUpdate();
 
             resultSet = preparedStatement.getGeneratedKeys();
@@ -92,10 +90,9 @@ public class UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("delete from userinfo where id = ? ");
-            preparedStatement.setObject(1, id);
+            Statement_Maker statement_maker = new Delete_Statement_Maker(id);
+            preparedStatement = statement_maker.make_statement(connection);
             preparedStatement.executeUpdate();
-
         } finally {
             try {
                 preparedStatement.close();
@@ -117,12 +114,9 @@ public class UserDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("update userinfo set name = ? , password = ? where id = ?");
-            preparedStatement.setObject(1, user.getName());
-            preparedStatement.setObject(2, user.getPassword());
-            preparedStatement.setObject(3, user.getId());
+            Statement_Maker statement_maker = new Update_Statement_Maker(user);
+            preparedStatement = statement_maker.make_statement(connection);
             preparedStatement.executeUpdate();
-
         } finally {
             try {
                 preparedStatement.close();
