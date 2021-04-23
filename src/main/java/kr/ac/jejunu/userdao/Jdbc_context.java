@@ -1,10 +1,7 @@
 package kr.ac.jejunu.userdao;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Jdbc_context {
     private final DataSource dataSource;
@@ -103,5 +100,36 @@ public class Jdbc_context {
                 e.printStackTrace();
             }
         }
+    }
+
+    User get(Object[] arr, String sql) throws SQLException {
+        return get_context(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < arr.length ; i ++ ){
+                preparedStatement.setObject(i+1, arr[i]);
+            }
+            return preparedStatement;
+        });
+    }
+
+    User insert(User user, String sql, Object[] arr, UserDao userDao) throws SQLException {
+        return insert_context(user, connection->{
+            PreparedStatement preparedStatement = connection.prepareStatement(sql
+                    , Statement.RETURN_GENERATED_KEYS);
+            for (int i = 0; i < arr.length ; i ++ ){
+                preparedStatement.setObject(i+1, arr[i]);
+            }
+            return preparedStatement;
+        });
+    }
+
+    void up_del(Object[] arr, String sql) throws SQLException {
+        updel_context(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < arr.length; i++) {
+                preparedStatement.setObject(i + 1, arr[i]);
+            }
+            return preparedStatement;
+        });
     }
 }

@@ -13,50 +13,25 @@ public class UserDao {
     public User get(Integer id) throws SQLException {
         Object[] arr = {id};
         String sql = "select * from userinfo where id = ?";
-        return jdbc_context.get_context(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for ( int i = 0 ; i < arr.length ; i ++ ){
-                preparedStatement.setObject(i+1, arr[i]);
-            }
-            return preparedStatement;
-        });
+        return jdbc_context.get(arr, sql);
     }
 
     public User insert(User user) throws SQLException{
         String sql = "insert into userinfo (name, password)  values (?,?)";
         Object[] arr = {user.getName(), user.getPassword()};
-        return jdbc_context.insert_context(user, connection->{
-            PreparedStatement preparedStatement = connection.prepareStatement(sql
-                    , Statement.RETURN_GENERATED_KEYS);
-            for ( int i = 0 ; i < arr.length ; i ++ ){
-                preparedStatement.setObject(i+1, arr[i]);
-            }
-            return preparedStatement;
-        });
+        return jdbc_context.insert(user, sql, arr, this);
     }
 
     public void delete(Integer id) throws SQLException {
         Object[] arr = {id};
         String sql = "delete from userinfo where id = ? ";
-        jdbc_context.updel_context(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for ( int i = 0 ; i < arr.length ; i ++ ){
-                preparedStatement.setObject(i+1, arr[i]);
-            }
-            return preparedStatement;
-        });
+        jdbc_context.up_del(arr, sql);
     }
 
     public void update(User user) throws SQLException {
         Object[] arr = {user.getName(),user.getPassword(),user.getId()};
         String sql = "update userinfo set name = ? , password = ? where id = ?";
-        jdbc_context.updel_context(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for ( int i = 0 ; i < arr.length ; i ++ ){
-                preparedStatement.setObject(i+1, arr[i]);
-            }
-            return preparedStatement;
-        });
+        jdbc_context.up_del(arr, sql);
     }
 
 }
