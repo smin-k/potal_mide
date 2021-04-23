@@ -1,5 +1,6 @@
 package kr.ac.jejunu.userdao;
 
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
@@ -19,9 +20,6 @@ public class UserDaoTests {
                 UserDao.class);
     }
 
-
-    Daofactory daofactory = new Daofactory();
-
     @Test
     public void Get() throws SQLException, ClassNotFoundException {
         Integer id = 1;
@@ -35,16 +33,45 @@ public class UserDaoTests {
 
     @Test
     public void insert() throws SQLException, ClassNotFoundException {
-        String name = "hulk";
-        String password = "1234";
         User user = new User();
-
+        String name = "hulk";
         user.setPassword( "1234");
-        user.setName("hulk");
+        user.setName(name);
 
         userDao.insert(user);
 
         user = userDao.get(user.getId());
+        assertThat(user.getName(), is(name));
+
+    }
+
+    @Test
+    public void delete() throws SQLException, ClassNotFoundException {
+        User user = new User();
+        user.setPassword( "1234");
+        user.setName("hulk");
+        userDao.insert(user);
+
+        userDao.delete(user.getId());
+        User deleted_user = userDao.get(user.getId());
+        assertThat(deleted_user, IsNull.nullValue());
+    }
+
+    @Test
+    public void update() throws SQLException, ClassNotFoundException {
+        String name = "hulk";
+        String password = "1234";
+        User user = new User();
+        user.setPassword(password);
+        user.setName(name);
+        userDao.insert(user);
+
+        String update_name = "hulk";
+        String update_password = "1234";
+        user.setName( update_name);
+        user.setPassword(update_password);
+        userDao.update(user);
+        User updated_user = userDao.get(user.getId());
         assertThat(user.getName(), is(name));
 
     }
