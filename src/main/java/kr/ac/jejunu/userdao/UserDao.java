@@ -2,12 +2,9 @@ package kr.ac.jejunu.userdao;
 
 import java.sql.*;
 
-public class UserDao {
+abstract public class UserDao {
     public User get(Integer id) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection connection =
-                DriverManager.getConnection("jdbc:mysql://localhost/jeju?serverTimezone=UTC"
-                        , "root", "5344");
+        Connection connection = getConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement("select * from userinfo where id = ?");
         preparedStatement.setLong(1, id);
@@ -28,10 +25,7 @@ public class UserDao {
     }
 
     public User insert(User user) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection connection =
-                DriverManager.getConnection("jdbc:mysql://localhost/jeju?serverTimezone=UTC"
-                        , "root", "5344");
+        Connection connection = getConnection();
         PreparedStatement preparedStatement =
                 connection.prepareStatement("insert into userinfo (name, password)  values (?,?)"
                         ,Statement.RETURN_GENERATED_KEYS);
@@ -43,6 +37,7 @@ public class UserDao {
         resultSet.next();
         user.setId(resultSet.getInt(1));
 
+
         resultSet.close();
         preparedStatement.close();
         connection.close();
@@ -50,4 +45,10 @@ public class UserDao {
         return user;
 
     }
+
+    abstract Connection getConnection() throws ClassNotFoundException, SQLException;
+//        Class.forName("com.mysql.cj.jdbc.Driver");
+//        return DriverManager.getConnection("jdbc:mysql://localhost/jeju?serverTimezone=UTC"
+//                , "root", "5344");
+//    }
 }

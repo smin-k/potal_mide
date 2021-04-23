@@ -2,3 +2,7 @@ kr/ac/jejunu/userdao/User.java
  kr.ac.jejunu.userdao.User
 kr/ac/jejunu/userdao/UserDao.java
  kr.ac.jejunu.userdao.UserDao
+kr/ac/jejunu/userdao/halla_UserDao.java
+ kr.ac.jejunu.userdao.halla_UserDao
+kr/ac/jejunu/userdao/Jeju_UserDao.java
+ kr.ac.jejunu.userdao.Jeju_UserDao
