@@ -9,7 +9,7 @@ import static org.hamcrest.core.Is.is;
 
 public class UserDaoTests {
     @Test
-    public void testGet() throws SQLException, ClassNotFoundException {
+    public void Get() throws SQLException, ClassNotFoundException {
         Integer id = 1;
         String name = "hulk";
         String password = "1234";
@@ -18,5 +18,22 @@ public class UserDaoTests {
         assertThat(user.getId(), is(id));
         assertThat(user.getName(), is(name));
         assertThat(user.getPassword(), is(password));
+    }
+
+    @Test
+    public void insert() throws SQLException, ClassNotFoundException { ;
+        String name = "hulk";
+        String password = "1234";
+        User user = new User();
+
+        user.setPassword( "1234");
+        user.setName("hulk");
+
+        UserDao userDao = new UserDao();
+        userDao.insert(user);
+
+        user = userDao.get(user.getId());
+        assertThat(user.getName(), is(name));
+
     }
 }
