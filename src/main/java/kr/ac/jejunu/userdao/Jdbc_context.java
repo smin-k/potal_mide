@@ -22,10 +22,9 @@ public class Jdbc_context {
             preparedStatement = statement_maker.make_statement(connection);
 
             preparedStatement.executeUpdate();
-
             resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next())
-                user.setId(resultSet.getInt(1));
+            resultSet.next();
+            user.setId(resultSet.getInt(1));
         } finally {
             try {
                 resultSet.close();
@@ -88,7 +87,6 @@ public class Jdbc_context {
     void updel_context(Statement_Maker statement_maker) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
             preparedStatement = statement_maker.make_statement(connection);
