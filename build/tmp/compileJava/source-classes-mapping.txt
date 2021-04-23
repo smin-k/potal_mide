@@ -10,9 +10,9 @@ kr/ac/jejunu/userdao/Statement_Maker.java
  kr.ac.jejunu.userdao.Statement_Maker
 kr/ac/jejunu/userdao/Get_Statement_Maker.java
  kr.ac.jejunu.userdao.Get_Statement_Maker
-kr/ac/jejunu/userdao/Daofactory.java
- kr.ac.jejunu.userdao.Daofactory
-kr/ac/jejunu/userdao/UserDao.java
- kr.ac.jejunu.userdao.UserDao
 kr/ac/jejunu/userdao/Jdbc_context.java
  kr.ac.jejunu.userdao.Jdbc_context
+kr/ac/jejunu/userdao/UserDao.java
+ kr.ac.jejunu.userdao.UserDao
+kr/ac/jejunu/userdao/Daofactory.java
+ kr.ac.jejunu.userdao.Daofactory

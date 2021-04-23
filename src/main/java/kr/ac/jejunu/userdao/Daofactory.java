@@ -23,8 +23,14 @@ public class Daofactory {
 
     @Bean
     public UserDao userdao() throws ClassNotFoundException {
-        return new UserDao(jdbc_context());
+        return new UserDao(JdbcTemplate());
     }
+
+    @Bean
+    public JdbcTemplate JdbcTemplate()  throws ClassNotFoundException {
+        return new JdbcTemplate(dataSource());
+    }
+
 
     @Bean
     public Jdbc_context jdbc_context() throws ClassNotFoundException {
